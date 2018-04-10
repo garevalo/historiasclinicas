@@ -1,0 +1,1310 @@
+CREATE DATABASE  IF NOT EXISTS `gesthospital` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `gesthospital`;
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
+--
+-- Host: 127.0.0.1    Database: gesthospital
+-- ------------------------------------------------------
+-- Server version	5.5.24-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `antecedentes`
+--
+
+DROP TABLE IF EXISTS `antecedentes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `antecedentes` (
+  `idantecedentes` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ant_personales` text CHARACTER SET utf8 COLLATE utf8_spanish_ci,
+  `ant_familiares` text CHARACTER SET utf8 COLLATE utf8_spanish_ci,
+  `ant_epidemiologicos` text CHARACTER SET utf8 COLLATE utf8_spanish_ci,
+  `ant_ocupacionales` text,
+  `numero_historia` int(11) unsigned zerofill DEFAULT NULL,
+  PRIMARY KEY (`idantecedentes`),
+  KEY `index_numero_historia` (`numero_historia`),
+  CONSTRAINT `fk_historia_paciente` FOREIGN KEY (`numero_historia`) REFERENCES `paciente` (`numero_historia`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `antecedentes`
+--
+
+LOCK TABLES `antecedentes` WRITE;
+/*!40000 ALTER TABLE `antecedentes` DISABLE KEYS */;
+INSERT INTO `antecedentes` VALUES (1,'Personales','Familiares','Epidemiológicos','Ocupacionales',00000000001),(2,'Antecedentes Familiares:','Antecedentes Familiares:','Antecedentes Familiares:','Antecedentes Familiares:',00000000002),(3,'asdasasdsad','asdas','asdsad','sadasd',00000000003);
+/*!40000 ALTER TABLE `antecedentes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cie`
+--
+
+DROP TABLE IF EXISTS `cie`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cie` (
+  `idcie` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_enfermedad` varchar(250) DEFAULT NULL,
+  `cie10` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idcie`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cie`
+--
+
+LOCK TABLES `cie` WRITE;
+/*!40000 ALTER TABLE `cie` DISABLE KEYS */;
+INSERT INTO `cie` VALUES (2,'Fiebre tifoidea, Fiebre paratifoidea','A01'),(3,'Shigellosis,disenterías bacilares Shigella','A03'),(4,'Otras infecciones instestinales bacterianas, colitis','A04'),(5,'Otras infecciones por Salmonella','A02');
+/*!40000 ALTER TABLE `cie` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `citas`
+--
+
+DROP TABLE IF EXISTS `citas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `citas` (
+  `idcitas` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersonal` int(11) DEFAULT NULL,
+  `numero_historia` int(10) unsigned zerofill DEFAULT NULL,
+  `inicio` datetime DEFAULT NULL,
+  `fin` datetime DEFAULT NULL,
+  `idestado_cita` int(1) DEFAULT NULL,
+  `idtipopersonal` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idcitas`),
+  KEY `idpersonal` (`idpersonal`),
+  KEY `numero_historia` (`numero_historia`),
+  KEY `estado_cita` (`idestado_cita`),
+  CONSTRAINT `` FOREIGN KEY (`idpersonal`) REFERENCES `personal_medico` (`idpersonal`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_estado_cita` FOREIGN KEY (`idestado_cita`) REFERENCES `estado_cita` (`idestado_cita`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_historia_cita` FOREIGN KEY (`numero_historia`) REFERENCES `paciente` (`numero_historia`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `citas`
+--
+
+LOCK TABLES `citas` WRITE;
+/*!40000 ALTER TABLE `citas` DISABLE KEYS */;
+INSERT INTO `citas` VALUES (1,13,0000000001,'2014-05-08 08:04:43',NULL,3,1),(2,13,0000000002,'2014-06-04 12:16:10',NULL,3,1),(3,13,0000000001,'2014-06-04 17:52:00',NULL,3,1),(4,13,0000000001,'2014-06-07 15:48:29',NULL,3,1),(5,14,0000000002,'2014-06-07 16:16:23',NULL,3,1),(6,14,0000000003,'2014-06-21 11:32:32',NULL,3,1);
+/*!40000 ALTER TABLE `citas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `consulta`
+--
+
+DROP TABLE IF EXISTS `consulta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `consulta` (
+  `idconsulta` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha_hora_consulta` datetime DEFAULT NULL,
+  `edad` int(3) DEFAULT NULL,
+  `peso` decimal(9,3) DEFAULT NULL,
+  `talla` decimal(9,3) DEFAULT NULL,
+  `presion_arterial` varchar(10) COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `frecuencia_cardiaca` int(3) DEFAULT NULL,
+  `pulso` int(4) DEFAULT NULL,
+  `frecuencia_respiratoria` int(4) DEFAULT NULL,
+  `temperatura` decimal(9,3) DEFAULT NULL,
+  `sed` int(1) DEFAULT NULL,
+  `apetito` int(1) DEFAULT NULL,
+  `miccion` int(1) DEFAULT NULL,
+  `deposicion` int(1) DEFAULT NULL,
+  `sueno` int(1) DEFAULT NULL,
+  `informante` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `estado_general` int(1) DEFAULT NULL,
+  `estado_conciencia` int(1) DEFAULT NULL,
+  `tiempo_cantidad` int(2) DEFAULT NULL,
+  `tiempo_descripcion` varchar(10) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `desc_crono_enfermedad` text CHARACTER SET utf8 COLLATE utf8_spanish_ci,
+  `examen_clinico` text CHARACTER SET utf8 COLLATE utf8_spanish_ci,
+  `medida_hig_diet` text CHARACTER SET utf8 COLLATE utf8_spanish_ci,
+  `medida_preventiva` varchar(200) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `apoyo_diagnostico` varchar(200) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `proxima_cita` date DEFAULT NULL,
+  `tipo_consulta` int(1) DEFAULT NULL,
+  `idcitas` int(11) DEFAULT NULL,
+  `hora_consulta` datetime DEFAULT NULL,
+  PRIMARY KEY (`idconsulta`),
+  KEY `idcitas` (`idcitas`),
+  CONSTRAINT `fk_consulta_cita` FOREIGN KEY (`idcitas`) REFERENCES `citas` (`idcitas`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `consulta`
+--
+
+LOCK TABLES `consulta` WRITE;
+/*!40000 ALTER TABLE `consulta` DISABLE KEYS */;
+INSERT INTO `consulta` VALUES (1,'2014-05-15 01:58:42',25,75.000,160.000,'70.50',20,70,50,36.000,1,2,2,1,1,'madre',2,3,4,'1','a se presentó en el capítulo de los síntomas los aspectos que se deben describir respecto a cada uno de ellos.','El examen clínico es un instrumento ','asa','asas','asas','2014-05-31',1,1,NULL),(2,'2014-06-04 18:03:13',49,70.000,160.000,'70.60',50,50,50,37.000,1,1,1,2,2,'Tío',2,2,2,'3','                En esta parte se identifica al paciente en cuanto a su nombre y edad. Cabe la posibilidad de agregar más información como teléfono de su casa, a quién contactar en caso de necesidad, qué previsión tiene, o qué actividad desarrolla.\r\n\r\nMás adelante, en la sección de Antecedentes, existe una subdivisión de Antecedentes Sociales y Personales, en la que es posible extenderse sobre aspectos que permiten conocer mejor al paciente como persona.','Definimos un radio button usando \"input\" tag. Damos un atributo nombrado \"TYPE=RADIO\" en el tag que define el tipo como un radio button. El nombre del atributo debe ser definido y debe ser el mismo. El valor en este caso será usado solo durante el procesamiento del formulario. \r\n\r\nNota: Todos las entradas de este tipo deben contener el mismo nombre. Este nombre es el que los agrupa. Si tiene nombres diferentes para cada botón, entonces se comportan individualmente.','Esta sección es sólo una mención muy corta del motivo por el que consulta el paciente.\r\n\r\nPor ejemplo: \"El paciente consulta por llevar 5 días con fiebre\", \"Paciente ingresa al hospital por presentar deposiciones negras\".\r\n\r\nEsta sección puede ser una ayuda adicional para entender más rápido cuál va a ser el problema principal del que tratará la anamnesis próxima, pero eventualmente podría omitirse.','Esta sección es sólo una mención muy corta del motivo por el que consulta el paciente.\r\n\r\nPor ejemplo: \"El paciente consulta por llevar 5 días con fiebre\", \"Paciente ingresa al hospital por presentar ','Esta sección es sólo una mención muy corta del motivo por el que consulta el paciente.\r\n\r\nPor ejemplo: \"El paciente consulta por llevar 5 días con fiebre\", \"Paciente ingresa al hospital por presentar ','2014-06-18',2,2,'2014-06-06 16:31:49'),(3,'2014-06-05 18:28:59',25,80.000,180.000,'70.60',40,30,40,37.000,1,1,2,2,1,'madre',2,2,1,'1','asasasadfggdf gdf gdfg                hgfhgf                ','fgdfg fdg fgdfgfg dfhg','dfghfh','ghghg','ghghttrytr','0000-00-00',0,3,'2014-06-07 13:25:49'),(4,'2014-06-07 15:48:46',25,85.000,180.000,'60',55,65,63,38.000,1,1,1,1,1,'el mismo',1,1,7,'1','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaassssssssssssssssssssssssssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','asasasasasfffffffffffffffffffffffffffff g hg    ghghg hg h','sakdjaskldaskl sakdlsakld klasfdhg jdjfsdf','itrogiheg hshiofhoidhfio dif dfhiodfhaih i sdifhoisdhgohdfiod ','2014-06-27',2,4,'2014-06-07 15:50:17'),(5,'2014-06-07 16:16:39',49,73.000,160.000,'50',50,50,50,37.500,1,1,1,1,1,'padre',1,1,3,'2','asasas                ','asas','asas','asas','asas','2014-06-24',2,5,'2014-06-07 16:17:19'),(6,'2014-06-21 11:32:50',38,70.000,150.000,'50',50,50,50,50.000,1,1,1,1,1,'asas',1,1,2,'1','asasas                ','asas','asas','asas','asasasa','2014-06-27',2,6,'2014-06-21 11:34:09');
+/*!40000 ALTER TABLE `consulta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `departamento`
+--
+
+DROP TABLE IF EXISTS `departamento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `departamento` (
+  `iddepartamento` int(11) NOT NULL AUTO_INCREMENT,
+  `departamento` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`iddepartamento`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `departamento`
+--
+
+LOCK TABLES `departamento` WRITE;
+/*!40000 ALTER TABLE `departamento` DISABLE KEYS */;
+INSERT INTO `departamento` VALUES (1,'Lima'),(2,'Ica'),(3,'Loreto'),(4,'Junín'),(5,'Arequipa'),(6,'Tacna'),(8,'Madre de Dios'),(9,'Tumbes'),(10,'Ucayali'),(11,'Puno'),(12,'Huancavelica'),(13,'Cajamarca'),(14,'Callao'),(15,'Amazonas'),(16,'Moquegua'),(17,'Pasco'),(18,'Apurímac'),(19,'Ayacucho');
+/*!40000 ALTER TABLE `departamento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `diagnostico`
+--
+
+DROP TABLE IF EXISTS `diagnostico`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `diagnostico` (
+  `iddiagnostico` int(11) NOT NULL AUTO_INCREMENT,
+  `cie` varchar(10) DEFAULT NULL,
+  `tratamiento` text,
+  `idconsulta` int(11) DEFAULT NULL,
+  PRIMARY KEY (`iddiagnostico`),
+  KEY `iddiagnostico` (`iddiagnostico`),
+  KEY `fk_diagnostico_consulta_idx` (`idconsulta`),
+  KEY `fk_diagnostico_cie_idx` (`cie`),
+  CONSTRAINT `fk_diagnostico_consulta` FOREIGN KEY (`idconsulta`) REFERENCES `consulta` (`idconsulta`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `diagnostico`
+--
+
+LOCK TABLES `diagnostico` WRITE;
+/*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
+INSERT INTO `diagnostico` VALUES (1,'A01','aasasas',1),(2,'A04','asas',1),(3,'A02','asahghghgh',3),(4,'A04','Esta sección es sólo una mención muy corta del motivo por el que consulta el paciente.\r\n\r\nPor ejemplo: \"El paciente consulta por llevar 5 días con fiebre\", \"Paciente ingresa al hospital por presentar deposiciones negras\".\r\n\r\nEsta sección puede ser una ayuda adicional para entender más rápido cuál va a ser el problema principal del que tratará la anamnesis próxima, pero eventualmente podría omitirse.',2),(5,'','',3),(6,'A02','asasasasasas',4),(7,'A04','sasasasas',4),(8,'A04','assas',5),(9,'A01','asasa',6);
+/*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `distrito`
+--
+
+DROP TABLE IF EXISTS `distrito`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `distrito` (
+  `iddistrito` int(3) NOT NULL AUTO_INCREMENT,
+  `distrito` varchar(45) DEFAULT NULL,
+  `idprovincia` int(11) DEFAULT NULL,
+  PRIMARY KEY (`iddistrito`),
+  KEY `idprovincia` (`idprovincia`),
+  CONSTRAINT `fk_idprovincia` FOREIGN KEY (`idprovincia`) REFERENCES `provincia` (`idprovincia`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `distrito`
+--
+
+LOCK TABLES `distrito` WRITE;
+/*!40000 ALTER TABLE `distrito` DISABLE KEYS */;
+INSERT INTO `distrito` VALUES (1,'Surco',1),(2,'Puente Piedra',1),(3,'Comas',1),(4,'Los Olivos',1),(5,'San Martín de Porres',1),(6,'Ancón',1);
+/*!40000 ALTER TABLE `distrito` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `estado_cita`
+--
+
+DROP TABLE IF EXISTS `estado_cita`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estado_cita` (
+  `idestado_cita` int(11) NOT NULL AUTO_INCREMENT,
+  `estado_cita` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`idestado_cita`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estado_cita`
+--
+
+LOCK TABLES `estado_cita` WRITE;
+/*!40000 ALTER TABLE `estado_cita` DISABLE KEYS */;
+INSERT INTO `estado_cita` VALUES (1,'Triaje'),(2,'En atención'),(3,'Atendido');
+/*!40000 ALTER TABLE `estado_cita` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `estado_civil`
+--
+
+DROP TABLE IF EXISTS `estado_civil`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estado_civil` (
+  `idestcivil` int(11) NOT NULL AUTO_INCREMENT,
+  `estado_civil` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (`idestcivil`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estado_civil`
+--
+
+LOCK TABLES `estado_civil` WRITE;
+/*!40000 ALTER TABLE `estado_civil` DISABLE KEYS */;
+INSERT INTO `estado_civil` VALUES (1,'Solter@'),(2,'Casad@'),(3,'Viud@'),(4,'Divorciad@');
+/*!40000 ALTER TABLE `estado_civil` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `estadousuario`
+--
+
+DROP TABLE IF EXISTS `estadousuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estadousuario` (
+  `idestadousuario` int(1) NOT NULL AUTO_INCREMENT,
+  `estado` varchar(10) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `descripcion` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (`idestadousuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estadousuario`
+--
+
+LOCK TABLES `estadousuario` WRITE;
+/*!40000 ALTER TABLE `estadousuario` DISABLE KEYS */;
+INSERT INTO `estadousuario` VALUES (1,'activo',NULL),(2,'inactivo',NULL);
+/*!40000 ALTER TABLE `estadousuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `evenement`
+--
+
+DROP TABLE IF EXISTS `evenement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `evenement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_bin NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `evenement`
+--
+
+LOCK TABLES `evenement` WRITE;
+/*!40000 ALTER TABLE `evenement` DISABLE KEYS */;
+INSERT INTO `evenement` VALUES (1,'13','2014-05-08 00:00:00','0000-00-00 00:00:00'),(2,'13','2014-05-09 00:00:00','0000-00-00 00:00:00'),(3,'13','2014-06-04 00:00:00','0000-00-00 00:00:00'),(4,'13','2014-06-07 00:00:00','0000-00-00 00:00:00'),(5,'14','2014-06-07 00:00:00','0000-00-00 00:00:00'),(6,'14','2014-06-21 00:00:00','0000-00-00 00:00:00'),(7,'14','2014-06-23 00:00:00','0000-00-00 00:00:00'),(8,'13','2014-06-22 00:00:00','0000-00-00 00:00:00'),(9,'14','2014-06-22 00:00:00','0000-00-00 00:00:00');
+/*!40000 ALTER TABLE `evenement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `grado_instruccion`
+--
+
+DROP TABLE IF EXISTS `grado_instruccion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `grado_instruccion` (
+  `idgradoinstruccion` int(11) NOT NULL AUTO_INCREMENT,
+  `grado_instruccion` varchar(45) CHARACTER SET gbk COLLATE gbk_bin DEFAULT NULL,
+  PRIMARY KEY (`idgradoinstruccion`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `grado_instruccion`
+--
+
+LOCK TABLES `grado_instruccion` WRITE;
+/*!40000 ALTER TABLE `grado_instruccion` DISABLE KEYS */;
+INSERT INTO `grado_instruccion` VALUES (1,'primaria'),(2,'secundaria'),(3,'secundaria incompleta'),(4,'tecnico'),(5,'universitario');
+/*!40000 ALTER TABLE `grado_instruccion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `grupo_sanguineo`
+--
+
+DROP TABLE IF EXISTS `grupo_sanguineo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `grupo_sanguineo` (
+  `idgruposang` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_grupo_sanguineo` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `descripcion_gruposang` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`idgruposang`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `grupo_sanguineo`
+--
+
+LOCK TABLES `grupo_sanguineo` WRITE;
+/*!40000 ALTER TABLE `grupo_sanguineo` DISABLE KEYS */;
+INSERT INTO `grupo_sanguineo` VALUES (1,'O-',NULL),(2,'O+',NULL),(3,'A-',NULL),(4,'A+',NULL),(5,'B-',NULL),(6,'B+',NULL),(7,'AB-',NULL),(8,'AB+',NULL);
+/*!40000 ALTER TABLE `grupo_sanguineo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ocupacion`
+--
+
+DROP TABLE IF EXISTS `ocupacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ocupacion` (
+  `idocupacion` int(3) NOT NULL AUTO_INCREMENT,
+  `ocupacion` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
+  PRIMARY KEY (`idocupacion`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ocupacion`
+--
+
+LOCK TABLES `ocupacion` WRITE;
+/*!40000 ALTER TABLE `ocupacion` DISABLE KEYS */;
+INSERT INTO `ocupacion` VALUES (1,'estudiante'),(2,'ama de casa'),(3,'trabajador'),(7,'vago'),(8,'profesor'),(9,'esquiador'),(10,'asas'),(11,'asasa'),(12,'fgfdgdfgdf');
+/*!40000 ALTER TABLE `ocupacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `paciente`
+--
+
+DROP TABLE IF EXISTS `paciente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `paciente` (
+  `numero_historia` int(11) unsigned zerofill NOT NULL,
+  `idpersonas` int(11) DEFAULT NULL,
+  `fecha_registro_paciente` date DEFAULT NULL,
+  `hora_inicio` time DEFAULT NULL,
+  `hora_fin` time DEFAULT NULL,
+  PRIMARY KEY (`numero_historia`),
+  KEY `idpersonas` (`idpersonas`),
+  CONSTRAINT `fk_paciente_persona` FOREIGN KEY (`idpersonas`) REFERENCES `personas` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paciente`
+--
+
+LOCK TABLES `paciente` WRITE;
+/*!40000 ALTER TABLE `paciente` DISABLE KEYS */;
+INSERT INTO `paciente` VALUES (00000000001,1,'2014-05-07','02:42:20','02:44:06'),(00000000002,160,'2014-05-08','07:48:35','07:52:53'),(00000000003,181,'2014-06-20','23:36:31','23:37:07');
+/*!40000 ALTER TABLE `paciente` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `personal_medico`
+--
+
+DROP TABLE IF EXISTS `personal_medico`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `personal_medico` (
+  `idpersonal` int(11) NOT NULL AUTO_INCREMENT,
+  `idtipopersonal` int(11) DEFAULT NULL,
+  `codigomedico` varchar(45) DEFAULT NULL,
+  `idpersona` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idpersonal`),
+  KEY `index_idpersona` (`idpersona`),
+  CONSTRAINT `fk_personal_persona` FOREIGN KEY (`idpersona`) REFERENCES `personas` (`idpersona`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `personal_medico`
+--
+
+LOCK TABLES `personal_medico` WRITE;
+/*!40000 ALTER TABLE `personal_medico` DISABLE KEYS */;
+INSERT INTO `personal_medico` VALUES (12,5,'0',1),(13,1,'3652',163),(14,1,'6985',169),(15,0,'0',170),(16,4,'5210',171);
+/*!40000 ALTER TABLE `personal_medico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `personas`
+--
+
+DROP TABLE IF EXISTS `personas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `personas` (
+  `idpersona` int(11) NOT NULL AUTO_INCREMENT,
+  `apepaterno` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `apematerno` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nombres` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `edad` int(3) DEFAULT NULL,
+  `idsexo` int(1) DEFAULT NULL,
+  `idraza` int(2) DEFAULT NULL,
+  `idgruposang` int(2) DEFAULT NULL,
+  `idestcivil` int(2) DEFAULT NULL,
+  `domicilio` varchar(200) DEFAULT NULL,
+  `dni` int(8) DEFAULT NULL,
+  `fecnacimiento` date DEFAULT NULL,
+  `iddistrito` int(3) DEFAULT NULL,
+  `procedencia` varchar(45) DEFAULT NULL,
+  `idgradoinstruccion` int(3) DEFAULT NULL,
+  `idreligion` int(3) DEFAULT NULL,
+  `idocupacion` int(3) DEFAULT NULL,
+  `idnpadre` varchar(50) DEFAULT NULL,
+  `idnmadre` varchar(50) DEFAULT NULL,
+  `notificar` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `telefono` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idpersona`),
+  UNIQUE KEY `dni_UNIQUE` (`dni`),
+  KEY `idsexo` (`idsexo`),
+  KEY `idraza` (`idraza`),
+  KEY `idgruposang` (`idgruposang`),
+  KEY `idestcivil` (`idestcivil`),
+  KEY `ididistrito` (`iddistrito`),
+  KEY `idreligion` (`idreligion`),
+  KEY `idgradoinstruccion` (`idgradoinstruccion`),
+  KEY `idocupacion` (`idocupacion`),
+  KEY `idnpadre` (`idnpadre`),
+  KEY `idnmadre` (`idnmadre`),
+  CONSTRAINT `fk_persona_estcivil` FOREIGN KEY (`idestcivil`) REFERENCES `estado_civil` (`idestcivil`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_persona_gradoinst` FOREIGN KEY (`idgradoinstruccion`) REFERENCES `grado_instruccion` (`idgradoinstruccion`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_persona_gruposang` FOREIGN KEY (`idgruposang`) REFERENCES `grupo_sanguineo` (`idgruposang`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_persona_ocupacion` FOREIGN KEY (`idocupacion`) REFERENCES `ocupacion` (`idocupacion`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_persona_raza` FOREIGN KEY (`idraza`) REFERENCES `raza` (`idraza`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_persona_religion` FOREIGN KEY (`idreligion`) REFERENCES `religion` (`idreligion`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `personas`
+--
+
+LOCK TABLES `personas` WRITE;
+/*!40000 ALTER TABLE `personas` DISABLE KEYS */;
+INSERT INTO `personas` VALUES (1,'Arévalo ','Povis','Giordan Brian',NULL,1,4,2,1,'Los Viñedos Mz B lte 17',45845768,'0000-00-00',2,'-----',5,1,1,'159','160','Yanet Povis Castro',951315698),(159,'Arévalo','Rojas','Giordan',NULL,1,NULL,NULL,NULL,NULL,12345678,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(160,'Povis','Castro','yanet',NULL,2,4,2,2,'Los Viñedos Mz B lte 17',16122699,'1965-04-18',4,'Matucana',4,1,3,'161','162','Yanet Povis Castro',5231715),(161,'Povis','c','Alejandro',NULL,1,NULL,NULL,NULL,NULL,23135456,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(162,'Castro','Palomino','Alejandra',NULL,2,NULL,NULL,NULL,NULL,65697977,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(163,'Sulca','Ramirez','Pedro',NULL,1,NULL,NULL,NULL,'Los Olivos',23145698,'1979-05-10',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,123698541),(164,'asasa','asa','asas',NULL,1,NULL,NULL,NULL,NULL,56456456,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(165,'asasa','ssdfdf','dfdfdfdf',NULL,2,NULL,NULL,NULL,NULL,98989856,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(166,'asas','asas','asasas',NULL,2,2,2,3,'Los Viñedos Mz B lte 17',56987451,'1979-02-05',4,'asasa',2,2,2,'164','165','sadasdasdasd',231231231),(169,'Ramirez','perez','mariano',NULL,1,NULL,NULL,NULL,'San Martín de porres',65896523,'0000-00-00',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,123456789),(170,'sadas','asdasd','asasa',NULL,2,NULL,NULL,NULL,'',54569874,'1974-04-16',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,231231),(171,'Perez','Malco','rositachu',NULL,1,NULL,NULL,NULL,'Santa luz mila comas',36985412,'0000-00-00',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,999999),(181,'asas','sasas','sasasds',NULL,1,1,1,1,'Los Viñedos Mz B lte 17',96664123,'1976-02-05',4,'asas',3,2,2,'asas','asas','asasas',232323232);
+/*!40000 ALTER TABLE `personas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `provincia`
+--
+
+DROP TABLE IF EXISTS `provincia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `provincia` (
+  `idprovincia` int(11) NOT NULL AUTO_INCREMENT,
+  `provincia` varchar(45) DEFAULT NULL,
+  `iddepartamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idprovincia`),
+  KEY `iddepartamento` (`iddepartamento`),
+  CONSTRAINT `fk_iddepartamento` FOREIGN KEY (`iddepartamento`) REFERENCES `departamento` (`iddepartamento`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `provincia`
+--
+
+LOCK TABLES `provincia` WRITE;
+/*!40000 ALTER TABLE `provincia` DISABLE KEYS */;
+INSERT INTO `provincia` VALUES (1,'Lima',1),(2,'Cañete',1),(3,'Huarochiri',1),(4,'Chincha',2),(5,'Pisco',2),(6,'Ica',2),(7,'Nasca',2),(8,'Palpa',2),(9,'Maynas',3),(10,'Alto Amazonas',3),(11,'Datem del Marañón',3),(12,'Loreto',3),(13,'Mariscal Ramón Castilla',3),(16,'Chachapoyas',15),(17,'Ácora',11);
+/*!40000 ALTER TABLE `provincia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `raza`
+--
+
+DROP TABLE IF EXISTS `raza`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `raza` (
+  `idraza` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_raza` varchar(20) DEFAULT NULL,
+  `descripcion_raza` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`idraza`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `raza`
+--
+
+LOCK TABLES `raza` WRITE;
+/*!40000 ALTER TABLE `raza` DISABLE KEYS */;
+INSERT INTO `raza` VALUES (1,'Blanca',NULL),(2,'Negra',NULL),(3,'China',NULL),(4,'Mestiza',NULL);
+/*!40000 ALTER TABLE `raza` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `religion`
+--
+
+DROP TABLE IF EXISTS `religion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `religion` (
+  `idreligion` int(11) NOT NULL AUTO_INCREMENT,
+  `religion` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `descripcion_religion` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (`idreligion`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `religion`
+--
+
+LOCK TABLES `religion` WRITE;
+/*!40000 ALTER TABLE `religion` DISABLE KEYS */;
+INSERT INTO `religion` VALUES (1,'Católica',NULL),(2,'Judía',NULL),(3,'Cristiana',NULL),(4,'Musulmana',NULL);
+/*!40000 ALTER TABLE `religion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sexo`
+--
+
+DROP TABLE IF EXISTS `sexo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sexo` (
+  `idsexo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_sexo` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (`idsexo`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sexo`
+--
+
+LOCK TABLES `sexo` WRITE;
+/*!40000 ALTER TABLE `sexo` DISABLE KEYS */;
+INSERT INTO `sexo` VALUES (1,'Masculino'),(2,'Femenino');
+/*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tipo_personalmedico`
+--
+
+DROP TABLE IF EXISTS `tipo_personalmedico`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipo_personalmedico` (
+  `idtipopersonal` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_personal` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idtipopersonal`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipo_personalmedico`
+--
+
+LOCK TABLES `tipo_personalmedico` WRITE;
+/*!40000 ALTER TABLE `tipo_personalmedico` DISABLE KEYS */;
+INSERT INTO `tipo_personalmedico` VALUES (1,'Medicina'),(2,'Obstetricia'),(3,'Odontología'),(4,'Enfermería'),(5,'Administrativo');
+/*!40000 ALTER TABLE `tipo_personalmedico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tipousuario`
+--
+
+DROP TABLE IF EXISTS `tipousuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipousuario` (
+  `idtipousuario` int(1) NOT NULL AUTO_INCREMENT,
+  `tipousuario` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `descripcion_usuario` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (`idtipousuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipousuario`
+--
+
+LOCK TABLES `tipousuario` WRITE;
+/*!40000 ALTER TABLE `tipousuario` DISABLE KEYS */;
+INSERT INTO `tipousuario` VALUES (1,'administrador',NULL),(2,'médico',NULL),(3,'admision',NULL),(4,'triaje',NULL);
+/*!40000 ALTER TABLE `tipousuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `usuario` (
+  `idusuario` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(15) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `contrasena` varchar(15) DEFAULT NULL,
+  `idpersona` int(11) DEFAULT NULL,
+  `idestadousuario` int(1) DEFAULT NULL,
+  `idtipousuario` int(1) DEFAULT NULL,
+  PRIMARY KEY (`idusuario`),
+  KEY `index2` (`idpersona`),
+  KEY `index3` (`idestadousuario`),
+  KEY `index4` (`idtipousuario`),
+  CONSTRAINT `fkestadousuario` FOREIGN KEY (`idestadousuario`) REFERENCES `estadousuario` (`idestadousuario`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fkpersona` FOREIGN KEY (`idpersona`) REFERENCES `personas` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fktipousuario` FOREIGN KEY (`idtipousuario`) REFERENCES `tipousuario` (`idtipousuario`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (10,'garevalo','123456',1,1,1),(11,'Pedro','pedro',163,1,2),(12,'mario','mario',169,1,2),(14,'rosamelano','rosita',171,2,3);
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `vista_consulta_medica`
+--
+
+DROP TABLE IF EXISTS `vista_consulta_medica`;
+/*!50001 DROP VIEW IF EXISTS `vista_consulta_medica`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `vista_consulta_medica` (
+  `idconsulta` tinyint NOT NULL,
+  `fecha_hora_consulta` tinyint NOT NULL,
+  `edad` tinyint NOT NULL,
+  `peso` tinyint NOT NULL,
+  `talla` tinyint NOT NULL,
+  `presion_arterial` tinyint NOT NULL,
+  `frecuencia_cardiaca` tinyint NOT NULL,
+  `pulso` tinyint NOT NULL,
+  `frecuencia_respiratoria` tinyint NOT NULL,
+  `temperatura` tinyint NOT NULL,
+  `sed` tinyint NOT NULL,
+  `apetito` tinyint NOT NULL,
+  `miccion` tinyint NOT NULL,
+  `deposicion` tinyint NOT NULL,
+  `sueno` tinyint NOT NULL,
+  `informante` tinyint NOT NULL,
+  `estado_general` tinyint NOT NULL,
+  `estado_conciencia` tinyint NOT NULL,
+  `tiempo_cantidad` tinyint NOT NULL,
+  `tiempo_descripcion` tinyint NOT NULL,
+  `desc_crono_enfermedad` tinyint NOT NULL,
+  `examen_clinico` tinyint NOT NULL,
+  `medida_hig_diet` tinyint NOT NULL,
+  `medida_preventiva` tinyint NOT NULL,
+  `apoyo_diagnostico` tinyint NOT NULL,
+  `proxima_cita` tinyint NOT NULL,
+  `tipo_consulta` tinyint NOT NULL,
+  `idcitas` tinyint NOT NULL,
+  `hora_consulta` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `vista_medicos`
+--
+
+DROP TABLE IF EXISTS `vista_medicos`;
+/*!50001 DROP VIEW IF EXISTS `vista_medicos`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `vista_medicos` (
+  `idpersona` tinyint NOT NULL,
+  `idpersonal` tinyint NOT NULL,
+  `nombre` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `vista_medicos_horario`
+--
+
+DROP TABLE IF EXISTS `vista_medicos_horario`;
+/*!50001 DROP VIEW IF EXISTS `vista_medicos_horario`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `vista_medicos_horario` (
+  `idpersona` tinyint NOT NULL,
+  `idpersonal` tinyint NOT NULL,
+  `nombre` tinyint NOT NULL,
+  `fecha` tinyint NOT NULL,
+  `idtipopersonal` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `vista_pacientes`
+--
+
+DROP TABLE IF EXISTS `vista_pacientes`;
+/*!50001 DROP VIEW IF EXISTS `vista_pacientes`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `vista_pacientes` (
+  `numero_historia` tinyint NOT NULL,
+  `idpersonas` tinyint NOT NULL,
+  `fecha_registro_paciente` tinyint NOT NULL,
+  `hora_inicio` tinyint NOT NULL,
+  `hora_fin` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `vista_pacientes2`
+--
+
+DROP TABLE IF EXISTS `vista_pacientes2`;
+/*!50001 DROP VIEW IF EXISTS `vista_pacientes2`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `vista_pacientes2` (
+  `numero_historia` tinyint NOT NULL,
+  `idpersonas` tinyint NOT NULL,
+  `fecha_registro_paciente` tinyint NOT NULL,
+  `hora_inicio` tinyint NOT NULL,
+  `hora_fin` tinyint NOT NULL,
+  `idpersona` tinyint NOT NULL,
+  `apepaterno` tinyint NOT NULL,
+  `apematerno` tinyint NOT NULL,
+  `nombres` tinyint NOT NULL,
+  `edad` tinyint NOT NULL,
+  `idsexo` tinyint NOT NULL,
+  `idraza` tinyint NOT NULL,
+  `idgruposang` tinyint NOT NULL,
+  `idestcivil` tinyint NOT NULL,
+  `domicilio` tinyint NOT NULL,
+  `dni` tinyint NOT NULL,
+  `fecnacimiento` tinyint NOT NULL,
+  `iddistrito` tinyint NOT NULL,
+  `procedencia` tinyint NOT NULL,
+  `idgradoinstruccion` tinyint NOT NULL,
+  `idreligion` tinyint NOT NULL,
+  `idocupacion` tinyint NOT NULL,
+  `idnpadre` tinyint NOT NULL,
+  `idnmadre` tinyint NOT NULL,
+  `notificar` tinyint NOT NULL,
+  `telefono` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping routines for database 'gesthospital'
+--
+/*!50003 DROP FUNCTION IF EXISTS `edad_paciente` */;
+ALTER DATABASE `gesthospital` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `edad_paciente`(num_historia int) RETURNS int(11)
+BEGIN
+
+
+  DECLARE edad int;
+  SET edad = (
+			select year(curdate())- year(a.fecnacimiento) from personas a
+			join paciente b on a.idpersona=b.idpersonas
+			where b.numero_historia = num_historia
+			) ;
+
+  RETURN edad;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gesthospital` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+/*!50003 DROP PROCEDURE IF EXISTS `editar_personal` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `editar_personal`(
+in var_dni int,
+in var_nombre varchar(50),
+in var_apepaterno varchar(50),
+in var_apematerno varchar(50),
+in var_fecha_nacimiento date,
+in var_sexo int,
+in var_telefono int,
+in var_direccion text,
+in var_tipo_personal int,
+in var_num_colegiatura varchar(10),
+in var_usuario varchar(20),
+in var_contrasena varchar(20),
+in var_tipo_usuario int,
+in var_idtipo_usuario int,
+in var_estado_usuario int,
+in var_idpersonal int
+)
+begin
+
+declare vidpersona,idusuario int;
+
+set vidpersona=(select idpersona from personal_medico where idpersonal=var_idpersonal);
+
+update personas set dni=var_dni,nombres=var_nombre,apepaterno=var_apepaterno,
+apematerno=var_apematerno,fecnacimiento=var_fecha_nacimiento,idsexo=var_sexo,
+telefono=var_telefono,domicilio=var_direccion
+where idpersona=vidpersona;
+
+update personal_medico set idtipopersonal=var_tipo_personal,codigomedico=var_num_colegiatura
+where idpersonal=var_idpersonal;
+
+
+if var_idtipo_usuario=1 then
+
+update usuario set usuario=var_usuario,contrasena=var_contrasena,idtipousuario=var_tipo_usuario,idestadousuario=var_estado_usuario
+where idpersona=vidpersona;
+
+else
+	update usuario set usuario=var_usuario,contrasena=var_contrasena where idpersona=vidpersona;
+
+end if;
+
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `registrar_paciente` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrar_paciente`(
+in var_numero_historia int,
+in var_hora time,
+in var_apepaterno varchar(50),
+in var_apematerno varchar(50),
+in var_nombre varchar(50),
+in var_sexo int,
+in var_raza int,
+in var_grupo_sanguineo int,
+in var_estado_civil int,
+in var_domicilio varchar(50),
+in var_dni int,
+in var_fecha_nac date,
+in var_iddistrito int(3),
+in var_procedencia varchar(50),
+in var_grado_instruccion int,
+in var_religion int,
+in var_ocupacion int,
+in var_padre varchar(50),
+in var_madre varchar(50),
+in var_notificar varchar(50),
+in var_telefono int,
+in accion int )
+BEGIN
+
+declare codpersona int;
+
+if accion=1 then
+	insert into 
+	personas 
+	(idpersona,apepaterno,apematerno,nombres,idsexo,idraza,	idgruposang,
+	idestcivil,domicilio,dni,fecnacimiento,iddistrito,procedencia,idgradoinstruccion,
+	idreligion,idocupacion,idnpadre,idnmadre,notificar,telefono) 
+	values
+	(null,var_apepaterno,var_apematerno,var_nombre , var_sexo , var_raza ,var_grupo_sanguineo ,
+	var_estado_civil , var_domicilio ,var_dni , var_fecha_nac,var_iddistrito, var_procedencia , 
+	var_grado_instruccion ,	var_religion , var_ocupacion , var_padre , var_madre , var_notificar , var_telefono );
+
+	set codpersona = (select idpersona from  personas order by idpersona desc limit 1);
+
+elseif accion=2 then
+
+	update personas set apepaterno=var_apepaterno,apematerno=var_apematerno ,nombres=var_nombre,idsexo=var_sexo,idraza=var_raza,
+	idgruposang=var_grupo_sanguineo,idestcivil=var_estado_civil,domicilio=var_domicilio,fecnacimiento=var_fecha_nac,
+	iddistrito=var_iddistrito,procedencia=var_procedencia,idgradoinstruccion=var_grado_instruccion,
+	idreligion=var_religion,idocupacion=var_ocupacion,idnpadre=var_padre,idnmadre=var_madre,notificar=var_notificar,telefono=var_telefono
+	where dni=var_dni;
+	
+	set codpersona = (select idpersona from  personas where dni=var_dni limit 1);
+
+end if;
+
+
+insert into paciente
+(numero_historia,idpersonas,fecha_registro_paciente,hora_inicio,hora_fin) 
+values 
+(
+var_numero_historia,codpersona,now(),var_hora,now());
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `registrar_personal` */;
+ALTER DATABASE `gesthospital` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrar_personal`(
+in var_dni int,
+in var_nombre varchar(40),
+in var_apepaterno varchar(40),
+in var_apematerno varchar(40),
+in var_fechanac date,
+in var_sexo int(2),
+in var_telefono int,
+in var_direccion varchar(100),
+in var_tipo_personal int(2),
+in var_num_colegio int,
+in var_usuario varchar(30),
+in var_contrasena varchar(30),
+in var_tipo_usuario int(2)
+)
+BEGIN
+
+declare codpersona int;
+
+insert into personas 
+	(idpersona,apepaterno,apematerno,nombres,idsexo,domicilio,dni,fecnacimiento,telefono) 
+values
+	(null,var_apepaterno,var_apematerno,var_nombre,var_sexo,var_direccion,var_dni,var_fechanac,var_telefono);
+
+set codpersona = (select idpersona from  personas order by idpersona desc limit 1);
+
+-- Guardar personal
+insert into personal_medico
+	(idpersonal,idtipopersonal,codigomedico,idpersona)
+values
+	(null,var_tipo_personal,var_num_colegio,codpersona);
+
+-- guardar usuario
+insert into usuario
+	(idusuario,usuario,contrasena,idpersona,idestadousuario,idtipousuario)
+values
+	(null,var_usuario,var_contrasena,codpersona,'1',var_tipo_usuario);
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gesthospital` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_registrar_consulta` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_consulta`(
+in var_fc int,
+in var_pulso int,
+in var_fr int,
+in var_sed int,
+in var_apetito int,
+in var_miccion int,
+in var_deposic int,
+in var_sueno int,
+in var_informante varchar(45),
+in var_estado_general int,
+in var_estado_conciencia int,
+in var_tiempo_cantidad int,
+in var_tiempo_descripcion varchar(10),
+in var_cie varchar(10),
+in var_tratamiento text,
+in var_idcita int,
+in var_examen_clinico text,
+in var_desc_cronologica text,
+in var_medida_higienica text,
+in var_medida_preventiva text,
+in var_apoyo_diagnostico text,
+in var_proxima_cita date,
+in var_tipo_consulta int,
+in i int)
+begin
+
+declare var_idconsulta int;
+if i=0 then
+
+	update  consulta set frecuencia_cardiaca=var_fc, pulso=var_pulso,frecuencia_respiratoria=var_fr,
+						 sed=var_sed,apetito=var_apetito,miccion=var_miccion,
+						 deposicion=var_deposic,sueno=var_sueno,informante=var_informante,estado_general=var_estado_general,
+						 estado_conciencia=var_estado_conciencia,tiempo_cantidad=var_tiempo_cantidad,tiempo_descripcion=var_tiempo_descripcion,
+						 desc_crono_enfermedad=var_desc_cronologica,examen_clinico=var_examen_clinico,medida_hig_diet=var_medida_higienica,
+						 medida_preventiva= var_medida_preventiva,apoyo_diagnostico=var_apoyo_diagnostico,proxima_cita=var_proxima_cita,
+					     hora_consulta=now(),tipo_consulta=var_tipo_consulta
+					where idcitas=var_idcita;
+
+update citas set idestado_cita='3'
+	where idcitas=var_idcita ;	
+end if;
+
+set var_idconsulta=(select idconsulta from consulta where idcitas=var_idcita limit 1);
+
+insert into diagnostico (iddiagnostico,cie,tratamiento,idconsulta) 
+	   values(null,var_cie,var_tratamiento,var_idconsulta);
+ 		
+
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_registro_triaje` */;
+ALTER DATABASE `gesthospital` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registro_triaje`(
+in var_edad int, 
+in var_peso decimal(5,2),
+in var_talla decimal(5,2),
+in var_pa varchar(20),
+in var_temperatura decimal(5,2),
+in var_idcita int
+)
+BEGIN
+
+
+insert into consulta (idconsulta,fecha_hora_consulta,edad,peso,talla,presion_arterial,temperatura,idcitas)
+values
+( null,now(),var_edad,var_peso,var_talla,var_pa,var_temperatura, var_idcita);
+
+update citas set idestado_cita='2'
+where idcitas=var_idcita ;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gesthospital` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+/*!50003 DROP PROCEDURE IF EXISTS `ver_citas` */;
+ALTER DATABASE `gesthospital` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ver_citas`()
+BEGIN
+
+SET lc_time_names = 'es_UY';
+select a.idcitas, a.numero_historia , concat(c.nombres,' ',c.apepaterno,' ',c.apematerno) nombre_paciente,
+            DATE_FORMAT(inicio,'%a %d de %M del %Y - %H:%i:%s') as inicio,d.nombre_medico,e.nombre_personal,f.estado_cita,a.idestado_cita
+            from citas a
+            join paciente b on a.numero_historia=b.numero_historia
+            join personas c on c.idpersona=b.idpersonas
+            join  (select a.idpersonal,concat(c.nombres,' ',c.apepaterno,' ',c.apematerno) as nombre_medico from personal_medico a 
+                            join personas c on c.idpersona=a.idpersona) d
+            on d.idpersonal=a.idpersonal
+            join tipo_personalmedico e on a.idtipopersonal=e.idtipopersonal
+            join estado_cita f on a.idestado_cita=f.idestado_cita
+            order by a.idcitas;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gesthospital` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+
+--
+-- Final view structure for view `vista_consulta_medica`
+--
+
+/*!50001 DROP TABLE IF EXISTS `vista_consulta_medica`*/;
+/*!50001 DROP VIEW IF EXISTS `vista_consulta_medica`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vista_consulta_medica` AS select `a`.`idconsulta` AS `idconsulta`,`a`.`fecha_hora_consulta` AS `fecha_hora_consulta`,`a`.`edad` AS `edad`,`a`.`peso` AS `peso`,`a`.`talla` AS `talla`,`a`.`presion_arterial` AS `presion_arterial`,`a`.`frecuencia_cardiaca` AS `frecuencia_cardiaca`,`a`.`pulso` AS `pulso`,`a`.`frecuencia_respiratoria` AS `frecuencia_respiratoria`,`a`.`temperatura` AS `temperatura`,`a`.`sed` AS `sed`,`a`.`apetito` AS `apetito`,`a`.`miccion` AS `miccion`,`a`.`deposicion` AS `deposicion`,`a`.`sueno` AS `sueno`,`a`.`informante` AS `informante`,`a`.`estado_general` AS `estado_general`,`a`.`estado_conciencia` AS `estado_conciencia`,`a`.`tiempo_cantidad` AS `tiempo_cantidad`,`a`.`tiempo_descripcion` AS `tiempo_descripcion`,`a`.`desc_crono_enfermedad` AS `desc_crono_enfermedad`,`a`.`examen_clinico` AS `examen_clinico`,`a`.`medida_hig_diet` AS `medida_hig_diet`,`a`.`medida_preventiva` AS `medida_preventiva`,`a`.`apoyo_diagnostico` AS `apoyo_diagnostico`,`a`.`proxima_cita` AS `proxima_cita`,`a`.`tipo_consulta` AS `tipo_consulta`,`a`.`idcitas` AS `idcitas`,`a`.`hora_consulta` AS `hora_consulta` from (((`consulta` `a` join `citas` `b` on((`a`.`idcitas` = `b`.`idcitas`))) join `paciente` `c` on((`c`.`numero_historia` = `b`.`numero_historia`))) join `personas` `d` on((`c`.`idpersonas` = `d`.`idpersona`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `vista_medicos`
+--
+
+/*!50001 DROP TABLE IF EXISTS `vista_medicos`*/;
+/*!50001 DROP VIEW IF EXISTS `vista_medicos`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vista_medicos` AS select `a`.`idpersona` AS `idpersona`,`b`.`idpersonal` AS `idpersonal`,concat(`a`.`nombres`,' ',`a`.`apepaterno`,' ',`a`.`apematerno`) AS `nombre` from ((`personas` `a` join `personal_medico` `b` on((`a`.`idpersona` = `b`.`idpersona`))) join `usuario` `c` on((`a`.`idpersona` = `c`.`idpersona`))) where ((`b`.`idtipopersonal` in ('1','3')) and (`c`.`idestadousuario` = '1')) order by `a`.`nombres` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `vista_medicos_horario`
+--
+
+/*!50001 DROP TABLE IF EXISTS `vista_medicos_horario`*/;
+/*!50001 DROP VIEW IF EXISTS `vista_medicos_horario`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vista_medicos_horario` AS select `a`.`idpersona` AS `idpersona`,`b`.`idpersonal` AS `idpersonal`,concat(`a`.`nombres`,' ',`a`.`apepaterno`,' ',`a`.`apematerno`) AS `nombre`,`d`.`start` AS `fecha`,`b`.`idtipopersonal` AS `idtipopersonal` from (((`personas` `a` join `personal_medico` `b` on((`a`.`idpersona` = `b`.`idpersona`))) join `usuario` `c` on((`a`.`idpersona` = `c`.`idpersona`))) join `evenement` `d` on((`d`.`title` = `b`.`idpersonal`))) where ((`b`.`idtipopersonal` in ('1','3')) and (`c`.`idestadousuario` = '1') and (`d`.`start` = curdate())) order by `a`.`nombres` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `vista_pacientes`
+--
+
+/*!50001 DROP TABLE IF EXISTS `vista_pacientes`*/;
+/*!50001 DROP VIEW IF EXISTS `vista_pacientes`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vista_pacientes` AS select `paciente`.`numero_historia` AS `numero_historia`,`paciente`.`idpersonas` AS `idpersonas`,`paciente`.`fecha_registro_paciente` AS `fecha_registro_paciente`,`paciente`.`hora_inicio` AS `hora_inicio`,`paciente`.`hora_fin` AS `hora_fin` from `paciente` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `vista_pacientes2`
+--
+
+/*!50001 DROP TABLE IF EXISTS `vista_pacientes2`*/;
+/*!50001 DROP VIEW IF EXISTS `vista_pacientes2`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vista_pacientes2` AS select `a`.`numero_historia` AS `numero_historia`,`a`.`idpersonas` AS `idpersonas`,`a`.`fecha_registro_paciente` AS `fecha_registro_paciente`,`a`.`hora_inicio` AS `hora_inicio`,`a`.`hora_fin` AS `hora_fin`,`b`.`idpersona` AS `idpersona`,`b`.`apepaterno` AS `apepaterno`,`b`.`apematerno` AS `apematerno`,`b`.`nombres` AS `nombres`,`b`.`edad` AS `edad`,`b`.`idsexo` AS `idsexo`,`b`.`idraza` AS `idraza`,`b`.`idgruposang` AS `idgruposang`,`b`.`idestcivil` AS `idestcivil`,`b`.`domicilio` AS `domicilio`,`b`.`dni` AS `dni`,`b`.`fecnacimiento` AS `fecnacimiento`,`b`.`iddistrito` AS `iddistrito`,`b`.`procedencia` AS `procedencia`,`b`.`idgradoinstruccion` AS `idgradoinstruccion`,`b`.`idreligion` AS `idreligion`,`b`.`idocupacion` AS `idocupacion`,`b`.`idnpadre` AS `idnpadre`,`b`.`idnmadre` AS `idnmadre`,`b`.`notificar` AS `notificar`,`b`.`telefono` AS `telefono` from (((((((`paciente` `a` join `personas` `b` on((`a`.`idpersonas` = `b`.`idpersona`))) join `sexo` `c` on((`c`.`idsexo` = `b`.`idsexo`))) join `raza` `d` on((`d`.`idraza` = `b`.`idraza`))) join `grupo_sanguineo` `e` on((`e`.`idgruposang` = `b`.`idgruposang`))) join `estado_civil` `f` on((`f`.`idestcivil` = `b`.`idestcivil`))) join `grado_instruccion` `g` on((`g`.`idgradoinstruccion` = `b`.`idgradoinstruccion`))) join `ocupacion` `i` on((`i`.`idocupacion` = `b`.`idocupacion`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-06-24  6:21:07

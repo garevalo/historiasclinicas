@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/reporte/citas_registradas/frm_citas_registradas.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/models/paciente/mpaciente.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/historia_clinica/citas.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/reporte/citas_registradas/reporte_citas_registradas.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/models/historia/mcitas.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/controllers/reporte/creporte.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/reporte/pacientes_registrados/frm_pacientes_registrados.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/reporte/pacientes_registrados/reporte_pacientes_registrados.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/reporte/reporte_medico/frm_reporte_medico.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/js/funciones.js</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/controllers/historias/ccitas.php</file>
+            <file>file:/C:/wamp/www/historias-clinicas/application/views/pacientes/BuscarPaciente.php</file>
+        </group>
+    </open-files>
+</project-private>
